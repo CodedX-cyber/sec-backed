@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 import sqlite3
 import traceback
+from waitress import serve
 
 app = Flask(__name__)
 CORS(app)
@@ -110,13 +111,12 @@ def search():
         return jsonify(response)
         
     except Exception as e:
-        print(f"Error in search endpoint: {str(e)}")
-        print(f"Stack trace: {traceback.format_exc()}")
-        return jsonify({'error': 'Internal server error'}), 500
+        print(f"Error: {str(e)}")
+        raise
     finally:
         # Close the connection after use
         if 'conn' in locals():
             conn.close()
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    serve(app, host='0.0.0.0', port=8080)
