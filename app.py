@@ -5,7 +5,7 @@ import traceback
 from waitress import serve
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/search": {"origins": "https://agoperfectsolutions.com"}})
 
 def init_db():
     conn = sqlite3.connect(':memory:')
@@ -111,8 +111,9 @@ def search():
         return jsonify(response)
         
     except Exception as e:
-        print(f"Error: {str(e)}")
-        raise
+        print(f"Error in search endpoint: {str(e)}")
+        print(traceback.format_exc())
+        return jsonify({'error': str(e)}), 500
     finally:
         # Close the connection after use
         if 'conn' in locals():
