@@ -1,16 +1,7 @@
-import logging
-from flask import Flask, request, jsonify, send_file
-from flask_cors import CORS
 import sqlite3
-import traceback
-
-# Set up logging
-logging.basicConfig(level=logging.DEBUG)
-app = Flask(__name__, static_folder='images', static_url_path='/images')
-CORS(app, resources={r"/*": {"origins": ["http://localhost:8080", "https://agroperfectsolutions.com"], "allow_headers": ["Content-Type", "Authorization"], "expose_headers": ["Content-Type"], "supports_credentials": True}})
+import json
 
 def init_db():
-    logging.info("Initializing database...")
     conn = sqlite3.connect(':memory:')
     c = conn.cursor()
     c.execute('''CREATE TABLE companies
@@ -19,7 +10,6 @@ def init_db():
                   headquarters TEXT, ceo TEXT, 
                   founded INTEGER, employees INTEGER)''')
     
-    # Insert more detailed sample data
     sample_data = [
         ('Apple Inc.', 'AAPL', 'Technology', 
          'Multinational tech company specializing in consumer electronics, software, and online services.',
@@ -49,47 +39,29 @@ def init_db():
     ]
     c.executemany('''INSERT INTO companies (name, ticker, industry, details, market_cap, headquarters, ceo, founded, employees) 
                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)''', sample_data)
-    
     return conn
 
-@app.route('/')
-def index():
-    return send_file('index.html')
-
-@app.route('/api/search', methods=['POST'])
-def search():
-    logging.info("Received search request")
+def handler(request):
     try:
-        # Create a new connection for each request
         conn = init_db()
         c = conn.cursor()
         
         data = request.get_json()
-        logging.info(f"Request data: {data}")
-        
         if not data or not isinstance(data, dict):
-            logging.error("Invalid request data format")
-            return jsonify({'error': 'Invalid request data'}), 400
+            return {'error': 'Invalid request data'}, 400
             
         query = data.get('query', '').lower()
         is_subscribed = data.get('isSubscribed', False)
         
-        logging.info(f"Searching for: {query}")
-        logging.info(f"Subscription status: {is_subscribed}")
-        
         if not query:
-            logging.info("Empty query received")
-            return jsonify([])
+            return [], 200
             
-        logging.info("Executing search query...")
         c.execute('''SELECT * FROM companies 
                     WHERE lower(name) LIKE ? 
                     OR lower(ticker) LIKE ? 
                     OR lower(industry) LIKE ?''',
                   (f'%{query}%', f'%{query}%', f'%{query}%'))
         results = c.fetchall()
-        
-        logging.info(f"Found {len(results)} results")
         
         response = []
         for row in results:
@@ -99,7 +71,6 @@ def search():
                 'market_cap': f"${row[4]:,.0f}B" if row[4] else None,
                 'headquarters': row[5]
             }
-            
             if is_subscribed:
                 company.update({
                     'industry': row[2],
@@ -108,19 +79,9 @@ def search():
                     'founded': row[7],
                     'employees': f"{row[8]:,}" if row[8] else None
                 })
-            
             response.append(company)
         
-        logging.info("Returning search results")
-        return jsonify(response)
+        conn.close()
+        return response, 200
     except Exception as e:
-        logging.error(f"Error in search endpoint: {str(e)}")
-        logging.error(traceback.format_exc())
-        return jsonify({'error': str(e)}), 500
-    finally:
-        # Close the connection after use
-        if 'conn' in locals():
-            conn.close()
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080, debug=True)
+        return {'error': str(e)}, 500

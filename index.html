@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>U.S. Securities and Exchange Commission</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
@@ -20,6 +20,29 @@
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
     }
     .social-icon { font-size: 1.5rem; }
+    
+    /* Mobile-specific styles */
+    @media (max-width: 768px) {
+      .container { max-width: 100% !important; }
+      .search-container { padding: 1rem !important; }
+      .search-input { width: 100% !important; }
+      .search-button { width: 100% !important; }
+      .nav-links { display: none !important; }
+      .mobile-menu { display: block !important; }
+      .quick-links { grid-template-columns: 1fr !important; }
+      .footer-grid { grid-template-columns: 1fr !important; }
+    }
+    
+    /* Touch-friendly elements */
+    .touch-friendly { 
+      padding: 1rem;
+      min-height: 44px; /* iOS touch target minimum size */
+    }
+    
+    /* Smooth scrolling */
+    html {
+      scroll-behavior: smooth;
+    }
   </style>
 </head>
 <body class="bg-white">
@@ -31,7 +54,12 @@
         <h1 class="text-xl font-bold">U.S. Securities and Exchange Commission</h1>
       </div>
       <div class="flex items-center space-x-4">
-        <nav class="hidden md:flex space-x-6">
+        <button id="mobileMenuBtn" class="mobile-menu bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 md:hidden">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+        <nav class="nav-links hidden md:flex space-x-6">
           <a href="#" class="text-gray-700 hover:text-blue-600">Newsroom</a>
           <a href="#" class="text-gray-700 hover:text-blue-600">Investors</a>
           <a href="#" class="text-gray-700 hover:text-blue-600">Small Businesses</a>
@@ -94,11 +122,21 @@
     <!-- Search Section -->
     <section class="text-center mb-12">
       <h2 class="text-3xl font-bold mb-6">Find Company Filings</h2>
-      <div class="flex justify-center items-center space-x-2">
-        <input id="searchInput" type="text" placeholder="Enter company name or ticker" class="border p-3 w-1/2 rounded-l focus:outline-none">
-        <button onclick="searchCompanies()" class="bg-blue-600 text-white p-3 rounded-r hover:bg-blue-700">Search</button>
+      <div class="search-container">
+        <div class="flex flex-col space-y-2">
+          <input id="searchInput" type="text" placeholder="Enter company name or ticker" class="search-input border p-3 rounded focus:outline-none w-full">
+          <div class="text-center">
+            <button onclick="searchCompanies()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Search</button>
+          </div>
+        </div>
       </div>
+      <div id="searchResults" class="mt-8"></div>
       <div class="mt-4">
+        <div class="flex items-center mb-4">
+          <input type="checkbox" id="subscriptionToggle" class="mr-2">
+          <label for="subscriptionToggle" class="text-gray-600">Show full details (requires subscription)</label>
+        </div>
+        <div id="resultsContainer" class="space-y-4"></div>
         <label class="inline-flex items-center">
           <input id="subscriptionToggle" type="checkbox" class="mr-2">
           <span class="text-gray-700">Subscribed User (Toggle for Full Access)</span>
@@ -258,7 +296,7 @@
       resultsContainer.innerHTML = '<p class="text-gray-600">Loading...</p>';
 
       try {
-        const response = await fetch('http://agroperfectsolutions.com/', {
+        const response = await fetch('/api/search', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ query, isSubscribed })
@@ -266,7 +304,10 @@
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const data = await response.json();
+        const data = await response.json().catch(error => {
+          console.error('Error parsing JSON:', error);
+          throw new Error('Failed to parse response');
+        });
         resultsContainer.innerHTML = '';
         if (data.length === 0) {
           resultsContainer.innerHTML = '<p class="text-gray-600">No results found.</p>';
@@ -288,6 +329,68 @@
         console.error(error);
       }
     }
+
+    // Mobile menu functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+      const navLinks = document.querySelector('.nav-links');
+      
+      if (mobileMenuBtn && navLinks) {
+        mobileMenuBtn.addEventListener('click', function() {
+          navLinks.classList.toggle('hidden');
+          this.classList.toggle('active');
+        });
+      }
+    });
+
+    // Search functionality
+    function searchCompanies() {
+      const searchInput = document.getElementById('searchInput');
+      const query = searchInput.value.trim();
+      
+      if (!query) return;
+
+      fetch(`/api/search?q=${encodeURIComponent(query)}`)
+        .then(response => response.json())
+        .then(results => {
+          const resultsContainer = document.getElementById('searchResults');
+          resultsContainer.innerHTML = '';
+          
+          if (results.length === 0) {
+            resultsContainer.innerHTML = '<p class="text-gray-600">No results found.</p>';
+            return;
+          }
+
+          results.forEach(result => {
+            const resultDiv = document.createElement('div');
+            resultDiv.className = 'bg-white p-4 rounded-lg shadow-md mb-4 touch-friendly';
+            resultDiv.innerHTML = '<h3 class="text-lg font-semibold">' + result.name + '</h3>' +
+              '<p class="text-gray-600">Ticker: ' + result.ticker + '</p>' +
+              '<p class="text-gray-600">Industry: ' + result.industry + '</p>' +
+              '<p class="text-gray-600">Market Cap: ' + result.market_cap.toLocaleString() + ' USD</p>' +
+              '<button onclick="viewCompany(\'' + result.ticker + '\')" class="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">' +
+              'View Details</button>';
+            resultsContainer.appendChild(resultDiv);
+          });
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('An error occurred while searching.');
+        });
+    }
+
+    function viewCompany(ticker) {
+      // Implement company detail view
+      console.log('Viewing company:', ticker);
+    }
+
+    // Initialize search functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const searchButton = document.querySelector('.search-button');
+      if (searchButton) {
+        searchButton.addEventListener('click', searchCompanies);
+      }
+    });
   </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9397f70998acbfec',t:'MTc0NjE5MzU4OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
