@@ -1,0 +1,17 @@
+{
+  "name": "sec-website",
+  "version": "1.0.0",
+  "description": "SEC Website with Tailwind CSS",
+  "main": "index.js",
+  "scripts": {
+    "build": "npx postcss src/input.css -o static/css/style.css",
+    "watch": "npx postcss src/input.css -o static/css/style.css --watch"
+  },
+  "dependencies": {
+    "tailwindcss": "^3.3.0"
+  },
+  "devDependencies": {
+    "postcss": "^8.4.21",
+    "autoprefixer": "^10.4.14"
+  }
+}
