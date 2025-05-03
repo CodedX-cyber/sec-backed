@@ -4,6 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>U.S. Securities and Exchange Commission</title>
+  <script>
+    // Tailwind CSS configuration
+    tailwind.config = {
+      theme: {
+        extend: {},
+      },
+      plugins: [],
+    }
+  </script>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body { font-family: Arial, sans-serif; }
@@ -137,6 +146,12 @@
     }
     
     /* Touch-friendly elements */
+    .touch-friendly {
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    /* Touch-friendly elements */
     .touch-friendly { 
       padding: 1.25rem;
       min-height: 44px; /* iOS touch target minimum size */
@@ -224,7 +239,7 @@
     <section class="grid md:grid-cols-2 gap-8 mb-12">
       <div class="crypto-bg relative">
         <div class="absolute inset-0 bg-black bg-opacity-40"></div>
-        <div class="relative z-10 p-8 bg-white/90 rounded-lg shadow-lg">
+        <div class="relative z-10 p-8 bg-white/90 rounded-lg shadow-lg touch-friendly">
           <h2 class="text-4xl font-bold mb-4">We make markets.</h2>
           <p class="mb-4 text-white">Founded to help our country respond to the Great Depression, we're the agency that protects investors from misconduct, promotes fairness & efficiency in the securities markets, and facilitates capital formation for those we hire to innovate and grow.</p>
           <button class="bg-white text-blue-600 px-4 py-2 rounded hover:bg-gray-100">About the SEC</button>
