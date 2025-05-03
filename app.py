@@ -39,7 +39,7 @@ def init_db():
         ('Pro-Returns', 'PRO',
          'Real Estate Investment Trust cryptocurrency Marijuana',
          'Florida-based real estate investment trust focused on cryptocurrency and marijuana sectors.',
-         None, 'Florida', 'Nicolas Thomas', 2021, 195000),
+         None, 'Florida', 'Nicolas Thomas', 2016, 195000),
         ('Amazon.com, Inc.', 'AMZN', 'E-commerce', 
          'E-commerce and cloud computing company.',
          1.3e12, 'Seattle, Washington', 'Andy Jassy', 1994, 1300000)
