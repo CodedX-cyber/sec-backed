@@ -10,51 +10,173 @@
     .sec-blue { background-color: #003087; }
     .sec-light-blue { background-color: #E6F0FA; }
     .crypto-bg {
-      background-image: url('images/crypto-roundtable-thumbnail.png');
+      background-image: url('/database/images/crypto-roundtable-thumbnail.png');
+      background-image: url('/images/crypto-roundtable-thumbnail.png');
       background-size: cover;
       background-position: center;
       position: relative;
       height: 200px;
+      overflow: hidden;
     }
     .crypto-bg h2 {
+      color: white;
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
     }
     .social-icon { font-size: 1.5rem; }
     
     /* Mobile-specific styles */
     @media (max-width: 768px) {
-      .container { max-width: 100% !important; }
-      .search-container { padding: 1rem !important; }
-      .search-input { width: 100% !important; }
-      .search-button { width: 100% !important; }
-      .nav-links { display: none !important; }
-      .mobile-menu { display: block !important; }
-      .quick-links { grid-template-columns: 1fr !important; }
-      .footer-grid { grid-template-columns: 1fr !important; }
+      .container { 
+        max-width: 100% !important; 
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+      }
+      .header-content {
+        flex-wrap: wrap;
+        justify-content: space-between !important;
+      }
+      .search-container { 
+        padding: 1.5rem !important;
+        margin: 1rem !important;
+      }
+      .search-input { 
+        width: 100% !important;
+        font-size: 1.4rem !important;
+        padding: 1.25rem !important;
+        border-radius: 8px !important;
+      }
+      .search-button { 
+        width: 100% !important;
+        font-size: 1.4rem !important;
+        padding: 1.25rem !important;
+        margin-top: 1rem !important;
+        border-radius: 8px !important;
+      }
+      .nav-links { 
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        background-color: #fff;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        border-top: 1px solid #e5e7eb;
+        z-index: 10;
+      }
+      .nav-links.active {
+        display: flex;
+      }
+      .nav-links a {
+        padding: 1rem;
+        text-align: center;
+        border-bottom: 1px solid #e5e7eb;
+      }
+      .mobile-menu { 
+        display: block !important;
+        font-size: 1.8rem !important;
+        padding: 1rem !important;
+      }
+      .quick-links { 
+        grid-template-columns: 1fr !important;
+        gap: 1.5rem !important;
+        padding: 1rem !important;
+      }
+      .footer-grid { 
+        grid-template-columns: 1fr !important;
+        gap: 1.5rem !important;
+        padding: 1rem !important;
+      }
+      .main-content {
+        padding: 1.5rem !important;
+      }
+      .section-title {
+        font-size: 1.8rem !important;
+        margin-bottom: 1.5rem !important;
+      }
+      .card {
+        margin-bottom: 1.5rem !important;
+        padding: 1.5rem !important;
+        border-radius: 12px !important;
+      }
+      .button {
+        padding: 1rem 2rem !important;
+        font-size: 1.2rem !important;
+        min-width: 100% !important;
+        border-radius: 8px !important;
+        margin: 0.5rem 0 !important;
+      }
+      .crypto-bg {
+        height: 150px !important;
+      }
+      .crypto-bg h2 {
+        font-size: 1.8rem !important;
+      }
+      .crypto-bg p {
+        font-size: 1.1rem !important;
+      }
+      .crypto-bg button {
+        font-size: 1.2rem !important;
+        padding: 1rem 2rem !important;
+      }
+      /* Ensure text does not overflow */
+      h1, p, a, span {
+        word-break: break-word;
+        overflow-wrap: break-word;
+      }
+    }
+    
+    /* Desktop-specific styles */
+    @media (min-width: 769px) {
+      .search-button {
+        width: auto !important; /* Prevent overstretching */
+        padding: 0.75rem 2rem !important; /* Adjust padding */
+      }
+      .mobile-menu {
+        display: none !important;
+      }
     }
     
     /* Touch-friendly elements */
     .touch-friendly { 
-      padding: 1rem;
+      padding: 1.25rem;
       min-height: 44px; /* iOS touch target minimum size */
+      border-radius: 8px;
     }
     
     /* Smooth scrolling */
     html {
       scroll-behavior: smooth;
     }
+    
+    /* Mobile search results */
+    .search-results {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .result-item {
+      padding: 1rem;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .result-item:last-child {
+      border-bottom: none;
+    }
   </style>
 </head>
 <body class="bg-white">
   <!-- Header -->
-  <header class="bg-white border-b">
-    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+  <header class="bg-white border-b relative">
+    <div class="container mx-auto px-4 py-4 flex items-center header-content">
       <div class="flex items-center">
         <img src="images/sec-logo-1x.png" alt="SEC Logo" class="h-10 mr-4">
         <h1 class="text-xl font-bold">U.S. Securities and Exchange Commission</h1>
       </div>
       <div class="flex items-center space-x-4">
-        <button id="mobileMenuBtn" class="mobile-menu bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 md:hidden">
+        <button id="mobileMenuBtn" class="mobile-menu bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
           </svg>
@@ -75,7 +197,7 @@
 
   <!-- Navigation -->
   <nav class="bg-gray-100 border-b">
-    <div class="container mx-auto px-4 py-2 flex justify-between items-center">
+    <div class="container mx-auto px-4 py-2 flex justify-between items-center flex-wrap">
       <div class="flex space-x-6">
         <a href="#" class="text-blue-600 hover:underline">Search</a>
         <a href="#" class="text-blue-600 hover:underline">Filings</a>
@@ -100,10 +222,13 @@
 
     <!-- We Make Markets & Quick Links -->
     <section class="grid md:grid-cols-2 gap-8 mb-12">
-      <div class="sec-blue text-white p-8 rounded">
-        <h2 class="text-4xl font-bold mb-4">We make markets.</h2>
-        <p class="mb-4">Founded to help our country respond to the Great Depression, we’re the agency that protects investors from misconduct, promotes fairness & efficiency in the securities markets, and facilitates capital formation for those we hire to innovate and grow.</p>
-        <button class="bg-gray-200 text-black px-4 py-2 rounded hover:bg-gray-300">About the SEC</button>
+      <div class="crypto-bg relative">
+        <div class="absolute inset-0 bg-black bg-opacity-40"></div>
+        <div class="relative z-10 p-8 bg-white/90 rounded-lg shadow-lg">
+          <h2 class="text-4xl font-bold mb-4">We make markets.</h2>
+          <p class="mb-4 text-white">Founded to help our country respond to the Great Depression, we're the agency that protects investors from misconduct, promotes fairness & efficiency in the securities markets, and facilitates capital formation for those we hire to innovate and grow.</p>
+          <button class="bg-white text-blue-600 px-4 py-2 rounded hover:bg-gray-100">About the SEC</button>
+        </div>
       </div>
       <div class="bg-white p-8 rounded shadow">
         <h3 class="text-xl font-semibold mb-4">Quick Links</h3>
@@ -123,10 +248,10 @@
     <section class="text-center mb-12">
       <h2 class="text-3xl font-bold mb-6">Find Company Filings</h2>
       <div class="search-container">
-        <div class="flex flex-col space-y-2">
+        <div class="flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-2">
           <input id="searchInput" type="text" placeholder="Enter company name or ticker" class="search-input border p-3 rounded focus:outline-none w-full">
           <div class="text-center">
-            <button onclick="searchCompanies()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Search</button>
+            <button onclick="searchCompanies()" class="search-button bg-blue-600 text-white rounded hover:bg-blue-700">Search</button>
           </div>
         </div>
       </div>
@@ -289,47 +414,6 @@
   </footer>
 
   <script>
-    async function searchCompanies() {
-      const query = document.getElementById('searchInput').value;
-      const isSubscribed = document.getElementById('subscriptionToggle').checked;
-      const resultsContainer = document.getElementById('resultsContainer');
-      resultsContainer.innerHTML = '<p class="text-gray-600">Loading...</p>';
-
-      try {
-        const response = await fetch('/api/search', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ query, isSubscribed })
-        });
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json().catch(error => {
-          console.error('Error parsing JSON:', error);
-          throw new Error('Failed to parse response');
-        });
-        resultsContainer.innerHTML = '';
-        if (data.length === 0) {
-          resultsContainer.innerHTML = '<p class="text-gray-600">No results found.</p>';
-          return;
-        }
-        data.forEach(company => {
-          const div = document.createElement('div');
-          div.className = 'border p-4 rounded shadow';
-          div.innerHTML = `
-            <p class="font-semibold"><strong>Name:</strong> ${company.name}</p>
-            <p><strong>Ticker:</strong> ${company.ticker}</p>
-            ${company.industry ? `<p><strong>Industry:</strong> ${company.industry}</p>` : ''}
-            ${company.details ? `<p><strong>Details:</strong> ${company.details}</p>` : '<p class="text-red-600">Subscribe for full details.</p>'}
-          `;
-          resultsContainer.appendChild(div);
-        });
-      } catch (error) {
-        resultsContainer.innerHTML = `<p class="text-red-600">Error fetching results: ${error.message}</p>`;
-        console.error(error);
-      }
-    }
-
     // Mobile menu functionality
     document.addEventListener('DOMContentLoaded', function() {
       const mobileMenuBtn = document.getElementById('mobileMenuBtn');
@@ -337,60 +421,92 @@
       
       if (mobileMenuBtn && navLinks) {
         mobileMenuBtn.addEventListener('click', function() {
-          navLinks.classList.toggle('hidden');
+          navLinks.classList.toggle('active');
           this.classList.toggle('active');
         });
       }
     });
 
-    // Search functionality
-    function searchCompanies() {
-      const searchInput = document.getElementById('searchInput');
-      const query = searchInput.value.trim();
+    async function searchCompanies() {
+      const query = document.getElementById('searchInput').value;
+      const isSubscribed = document.getElementById('subscriptionToggle').checked;
+      const resultsContainer = document.getElementById('resultsContainer');
       
-      if (!query) return;
-
-      fetch(`/api/search?q=${encodeURIComponent(query)}`)
-        .then(response => response.json())
-        .then(results => {
-          const resultsContainer = document.getElementById('searchResults');
-          resultsContainer.innerHTML = '';
-          
-          if (results.length === 0) {
-            resultsContainer.innerHTML = '<p class="text-gray-600">No results found.</p>';
-            return;
-          }
-
-          results.forEach(result => {
-            const resultDiv = document.createElement('div');
-            resultDiv.className = 'bg-white p-4 rounded-lg shadow-md mb-4 touch-friendly';
-            resultDiv.innerHTML = '<h3 class="text-lg font-semibold">' + result.name + '</h3>' +
-              '<p class="text-gray-600">Ticker: ' + result.ticker + '</p>' +
-              '<p class="text-gray-600">Industry: ' + result.industry + '</p>' +
-              '<p class="text-gray-600">Market Cap: ' + result.market_cap.toLocaleString() + ' USD</p>' +
-              '<button onclick="viewCompany(\'' + result.ticker + '\')" class="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">' +
-              'View Details</button>';
-            resultsContainer.appendChild(resultDiv);
+      if (!resultsContainer) {
+        console.error('Results container not found');
+        return;
+      }
+      
+      try {
+        resultsContainer.innerHTML = '<p class="text-gray-600">Loading...</p>';
+        
+        // Use full URL for API endpoint
+        const apiUrl = '/database/api/search';
+        
+        // Try POST first, then fall back to GET
+        let response;
+        try {
+          response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Origin': 'https://agroperfectsolutions.com'
+            },
+            credentials: 'include',
+            body: JSON.stringify({ query, isSubscribed })
           });
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          alert('An error occurred while searching.');
-        });
+        } catch (postError) {
+          console.log('POST failed, trying GET:', postError);
+          response = await fetch(`${apiUrl}?q=${encodeURIComponent(query)}`);
+        }
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        if (Array.isArray(data)) {
+          displaySearchResults(data);
+        } else {
+          console.error('Invalid response format:', data);
+          resultsContainer.innerHTML = '<p class="text-red-600">Invalid response format.</p>';
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        resultsContainer.innerHTML = '<p class="text-red-600">An error occurred while searching.</p>';
+      }
+    }
+
+    function displaySearchResults(companies) {
+      const resultsContainer = document.getElementById('resultsContainer');
+      if (!resultsContainer) return;
+      
+      resultsContainer.innerHTML = '';
+      
+      if (companies.length === 0) {
+        resultsContainer.innerHTML = '<p class="text-gray-600">No results found.</p>';
+        return;
+      }
+
+      companies.forEach(company => {
+        const div = document.createElement('div');
+        div.className = 'border p-4 rounded shadow mb-4 touch-friendly';
+        div.innerHTML = `
+          <h3 class="text-lg font-semibold">${company.name}</h3>
+          <p><strong>Ticker:</strong> ${company.ticker}</p>
+          ${company.industry ? `<p><strong>Industry:</strong> ${company.industry}</p>` : ''}
+          ${company.details ? `<p><strong>Details:</strong> ${company.details}</p>` : '<p class="text-red-600">Subscribe for full details.</p>'}
+          ${company.market_cap ? `<p><strong>Market Cap:</strong> ${company.market_cap.toLocaleString()}</p>` : ''}
+          <button onclick="viewCompany('${company.ticker}')" class="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">View Details</button>
+        `;
+        resultsContainer.appendChild(div);
+      });
     }
 
     function viewCompany(ticker) {
-      // Implement company detail view
       console.log('Viewing company:', ticker);
+      // Redirect or show modal with company details
     }
-
-    // Initialize search functionality
-    document.addEventListener('DOMContentLoaded', function() {
-      const searchButton = document.querySelector('.search-button');
-      if (searchButton) {
-        searchButton.addEventListener('click', searchCompanies);
-      }
-    });
   </script>
 </body>
 </html>
